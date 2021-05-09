@@ -120,7 +120,7 @@ class Board(object):
         n = self.n_in_row
 
         if self.states[self.last_move] == self.players[self.start_player] and self.check_forbidden_hands():
-            return True, { self.players[(self.start_player + 1) % 2] }
+            return True, self.players[(self.start_player + 1) % 2]
 
         moved = list(set(range(width * height)) - set(self.availables))
         if len(moved) < self.n_in_row *2-1:
@@ -157,19 +157,19 @@ class Board(object):
             [-1, 1],
         ]
         
-        patterns_of_three = [
+        patterns_of_three_matches = [
             1 if self.check_forbidden_pattern(p, d) else 0
             for d in directions
             for p in self.forbidden_hands_of_three_patterns
         ]
         
-        patterns_of_four = [
+        patterns_of_four_matches = [
             1 if self.check_forbidden_pattern(p, d) else 0
             for d in directions
             for p in self.forbidden_hands_of_four_patterns
         ]
         
-        if sum(patterns_of_three) > 1 or sum(patterns_of_four) > 1:
+        if sum(patterns_of_three_matches) > 1 or sum(patterns_of_four_matches) > 1:
             return True
     
     def check_forbidden_pattern(self, pattern, direction):
@@ -182,6 +182,9 @@ class Board(object):
         return False
     
     def list_equal(list1, list2):
+        if len(list1) != len(list2):
+            return False
+
         for (a, b) in zip(list1, list2):
             if a != b:
                 return False
@@ -238,7 +241,6 @@ class Game(object):
         print("Player", player1, "with X".rjust(3))
         print("Player", player2, "with O".rjust(3))
         print()
-        print(self.board.states)
         for x in range(width):
             print("{0:8}".format(x), end='')
         print('\r\n')
