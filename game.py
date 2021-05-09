@@ -6,9 +6,33 @@
 from __future__ import print_function
 import numpy as np
 
-
 class Board(object):
     """board for the game"""
+
+    """
+    0: blank
+    1: black
+    2: white
+    """
+    forbidden_hands_of_three_patterns = [
+        [0, 1, 1, 1, 0],
+        [0, 1, 0, 1, 1, 0],
+        [0, 1, 1, 0, 1, 0],
+    ]
+
+    forbidden_hands_of_four_patterns = [
+        [0, 1, 1, 1, 1, 0],
+        [0, 1, 1, 1, 0, 1],
+        [0, 1, 0, 1, 1, 1],
+        [1, 1, 1, 0, 1, 0],
+        [1, 0, 1, 1, 1, 0],
+        [2, 1, 1, 1, 1, 0],
+        [2, 1, 1, 1, 0, 1],
+        [2, 1, 0, 1, 1, 1],
+        [0, 1, 1, 1, 1, 2],
+        [1, 1, 1, 0, 1, 2],
+        [1, 0, 1, 1, 1, 2],
+    ]
 
     def __init__(self, **kwargs):
         self.width = int(kwargs.get('width', 8))
@@ -25,6 +49,7 @@ class Board(object):
         if self.width < self.n_in_row or self.height < self.n_in_row:
             raise Exception('board width and height can not be '
                             'less than {}'.format(self.n_in_row))
+        self.start_player = start_player
         self.current_player = self.players[start_player]  # start player
         # keep available moves in a list
         self.availables = list(range(self.width * self.height))
@@ -48,6 +73,11 @@ class Board(object):
             return -1
         h = location[0]
         w = location[1]
+        if h < 0 or h >= self.height:
+            return -1
+        if w < 0 or w >= self.width:
+            return -1
+
         move = h * self.width + w
         if move not in range(self.width * self.height):
             return -1
@@ -89,6 +119,9 @@ class Board(object):
         states = self.states
         n = self.n_in_row
 
+        if self.states[self.last_move] == self.players[self.start_player] and self.check_forbidden_hands():
+            return True, { self.players[(self.start_player + 1) % 2] }
+
         moved = list(set(range(width * height)) - set(self.availables))
         if len(moved) < self.n_in_row *2-1:
             return False, -1
@@ -115,6 +148,68 @@ class Board(object):
                 return True, player
 
         return False, -1
+
+    def check_forbidden_hands(self):
+        directions = [
+            [1, 0],
+            [1, 1],
+            [0, 1],
+            [-1, 1],
+        ]
+        
+        patterns_of_three = [
+            1 if self.check_forbidden_pattern(p, d) else 0
+            for d in directions
+            for p in self.forbidden_hands_of_three_patterns
+        ]
+        
+        patterns_of_four = [
+            1 if self.check_forbidden_pattern(p, d) else 0
+            for d in directions
+            for p in self.forbidden_hands_of_four_patterns
+        ]
+        
+        if sum(patterns_of_three) > 1 or sum(patterns_of_four) > 1:
+            return True
+    
+    def check_forbidden_pattern(self, pattern, direction):
+        for (i, x) in enumerate(pattern):
+            if x == 1:
+                pieces = self.collect_pieces(self.last_move, direction, i, len(pattern))
+                if pieces != [] and Board.list_equal(pieces, pattern):
+                    return True
+        
+        return False
+    
+    def list_equal(list1, list2):
+        for (a, b) in zip(list1, list2):
+            if a != b:
+                return False
+
+        return True
+
+    def collect_pieces(self, move, direction, look_back, length):
+        cur_location = self.move_to_location(move)
+        start_location = [
+            cur_location[0] - direction[0] * look_back,
+            cur_location[1] - direction[1] * look_back,
+        ]
+
+        pieces = []
+        for i in range(length):
+            location = [
+                start_location[0] + i * direction[0],
+                start_location[1] + i * direction[1],
+            ]
+            move = self.location_to_move(location)
+            if move == -1:
+                return []
+            else:
+                if move in self.states:
+                    pieces.append(1 if self.states[move] == self.players[self.start_player] else 2)
+                else:
+                    pieces.append(0)
+        return pieces
 
     def game_end(self):
         """Check whether the game is ended or not"""
@@ -143,6 +238,7 @@ class Game(object):
         print("Player", player1, "with X".rjust(3))
         print("Player", player2, "with O".rjust(3))
         print()
+        print(self.board.states)
         for x in range(width):
             print("{0:8}".format(x), end='')
         print('\r\n')
