@@ -38,7 +38,7 @@ class PolicyValueNet():
                 if block == 0:
                     setattr(self, "res_%i" % block, self.ResBlock(self.conv3, training=training))
                 else:
-                    setattr(self, "res_%i" % block, getattr(self, "res_%i" % (block-1)))
+                    setattr(self, "res_%i" % block, self.ResBlock(getattr(self, "res_%i" % (block-1)), training=training))
 
         # 3-1 Action Networks
         

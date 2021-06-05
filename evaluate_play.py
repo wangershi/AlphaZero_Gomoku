@@ -13,6 +13,7 @@ from models.policy_value_net_numpy import PolicyValueNetNumpy
 from models.policy_value_net_pytorch import PolicyValueNet as PytorchPolicyValueNet # Pytorch
 from models.policy_value_net_tensorflow import PolicyValueNet as TensorflowPolicyValueNet# Tensorflow
 from models.policy_value_net_pytorch2 import PolicyValueNet as PytorchPolicyValueNet2 # Pytorch
+from models.policy_value_net_tensorflow2 import PolicyValueNet as TensorflowPolicyValueNet2# Tensorflow
 import pickle
 import random
 import os
@@ -24,6 +25,7 @@ MODEL_CLASSES = {
 "pytorch":PytorchPolicyValueNet,
 "pytorch2":PytorchPolicyValueNet2,
 "tensorflow":TensorflowPolicyValueNet,
+"tensorflow2":TensorflowPolicyValueNet2,
 }
 import argparse
 parser = argparse.ArgumentParser()
@@ -110,7 +112,7 @@ class Human(object):
             inp = UI.get_input()
             location = UI.move_2_loc(inp[1])
             print(location)
-            if isinstance(location, str):  # for python3
+            if isinstance(location, str):  # for python3v
                 location = [int(n, 10) for n in location.split(",")]
             move = board.location_to_move(location)
 
@@ -132,7 +134,7 @@ def get_mcts_player(model_type, model_file, width, height):
 
         best_policy = MODEL_CLASSES[model_type](args, width, height, policy_param)
     else:
-        best_policy = MODEL_CLASSES[model_type](args, width, height, model_file)
+        best_policy = MODEL_CLASSES[model_type](args, width, height, model_file=model_file)
     mcts_player = MCTSPlayer(best_policy.policy_value_fn,
                              c_puct=5,
                              n_playout=args.n_playout)  # set larger n_playout for better performance

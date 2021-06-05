@@ -60,6 +60,11 @@ and then execute: ``python train.py``  (To use GPU in PyTorch, set ``use_gpu=Tru
 
 The models (best_policy.model and current_policy.model) will be saved every a few updates (default 50).  
 
+Compare models:
+```
+python evaluate_play.py --model_type1 tensorflow2 --model_type2 tensorflow2 --model_file1 model_best/no_resnet/best_policy.model --model_file2 model_best/resnet_24/best_policy.model --round_num 1 --n_layer_resnet 1 --enable_gui
+```
+
 **Note:** the 4 provided models were trained using Theano/Lasagne, to use them with PyTorch, please refer to [issue 5](https://github.com/junxiaosong/AlphaZero_Gomoku/issues/5).
 
 **Tips for training:**
