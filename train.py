@@ -61,6 +61,8 @@ parser.add_argument("--enable_random_logic", action='store_true',
                     help="enable random movement logic")
 parser.add_argument("--disable_equi_logic", action='store_true',
                     help="disable_equi_logic")
+parser.add_argument("--if_check_forbidden_hands", action='store_true',
+                    help="if check forbidden hands, default false")
 
 args, _ = parser.parse_known_args()
 print("Print the args:")
@@ -78,7 +80,8 @@ class TrainPipeline():
         self.board = Board(width=self.board_width,
                            height=self.board_height,
                            n_in_row=self.n_in_row,
-                           ef_for_eight=args.ef_for_eight)
+                           ef_for_eight=args.ef_for_eight,
+                           if_check_forbidden_hands=args.if_check_forbidden_hands)
         self.game = Game(self.board)
         # training params
         self.learn_rate = args.learn_rate

@@ -47,6 +47,8 @@ parser.add_argument("--n_playout",default=400,type=int,help="n_playout")
 parser.add_argument("--n_layer_resnet", default=-1, type=int, help="num of simulations for each move.")
 parser.add_argument("--enable_gui", action='store_true',
                     help="enable_gui")
+parser.add_argument("--if_check_forbidden_hands", action='store_true',
+                    help="if check forbidden hands, default false")
 
 
 args, _ = parser.parse_known_args()
@@ -143,7 +145,7 @@ from UI.gui import GUI
 def run():
     n = args.n_in_row
     width, height = args.board_width, args.board_height
-    board = Board(width=width, height=height, n_in_row=n)
+    board = Board(width=width, height=height, n_in_row=n, if_check_forbidden_hands=args.if_check_forbidden_hands)
     game = Game(board, enable_gui=args.enable_gui)
     mcts1 = get_mcts_player(args.model_type1, args.model_file1, width, height)
     mcts2 = get_mcts_player(args.model_type2, args.model_file2, width, height)

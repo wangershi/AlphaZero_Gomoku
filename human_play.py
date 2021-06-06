@@ -35,6 +35,8 @@ parser.add_argument("--model_file", default='./best_policy.model', type=str,
 parser.add_argument("--n_layer_resnet", default=-1, type=int, help="num of simulations for each move.")
 parser.add_argument("--enable_gui", default=True, action='store_true',
                     help="enable_gui")
+parser.add_argument("--if_check_forbidden_hands", action='store_true',
+                    help="if check forbidden hands, default false")
 
 args, _ = parser.parse_known_args()
 print("Print the args:")
@@ -94,7 +96,7 @@ def run():
     width, height = args.board_width, args.board_height
     model_file = args.model_file
     # try:
-    board = Board(width=width, height=height, n_in_row=n)
+    board = Board(width=width, height=height, n_in_row=n, if_check_forbidden_hands=args.if_check_forbidden_hands)
     game = Game(board, enable_gui=args.enable_gui)
     start_index = 0
 

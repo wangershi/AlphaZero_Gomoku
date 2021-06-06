@@ -46,6 +46,7 @@ class Board(object):
         self.n_in_row = int(kwargs.get('n_in_row', 5))
         self._ef_for_eight = int(kwargs.get('ef_for_eight', -1))
         self.players = [1, 2]  # player1 and player2
+        self.if_check_forbidden_hands = bool(kwargs.get('if_check_forbidden_hands', False))
 
     def init_board(self, start_player=0):
         if self.width < self.n_in_row or self.height < self.n_in_row:
@@ -160,7 +161,7 @@ class Board(object):
         states = self.states
         n = self.n_in_row
 
-        if self.states[self.last_move] == self.players[self.start_player] and self.check_forbidden_hands():
+        if self.if_check_forbidden_hands and self.states[self.last_move] == self.players[self.start_player] and self.check_forbidden_hands():
             return True, self.players[(self.start_player + 1) % 2]
 
         moved = list(set(range(width * height)) - set(self.availables))
