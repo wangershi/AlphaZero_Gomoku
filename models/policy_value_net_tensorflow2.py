@@ -41,7 +41,6 @@ class PolicyValueNet():
                     setattr(self, "res_%i" % block, self.ResBlock(getattr(self, "res_%i" % (block-1)), training=training))
 
         # 3-1 Action Networks
-        
         if args.n_layer_resnet != -1:
             self.action_conv = tf.layers.conv2d(inputs=getattr(self, "res_%i" % (args.n_layer_resnet-1)), filters=4,
                                             kernel_size=[1, 1], padding="same",
@@ -55,17 +54,26 @@ class PolicyValueNet():
         # Flatten the tensor
         self.action_conv_flat = tf.reshape(
                 self.action_conv, [-1, 4 * board_height * board_width])
+
         # 3-2 Full connected layer, the output is the log probability of moves
         # on each slot on the board
         self.action_fc = tf.layers.dense(inputs=self.action_conv_flat,
                                          units=board_height * board_width,
                                          activation=tf.nn.log_softmax)
+
         # 4 Evaluation Networks
-        self.evaluation_conv = tf.layers.conv2d(inputs=self.conv3, filters=2,
-                                                kernel_size=[1, 1],
-                                                padding="same",
-                                                data_format="channels_last",
-                                                activation=tf.nn.relu)
+        if args.n_layer_resnet != -1:
+            self.evaluation_conv = tf.layers.conv2d(inputs=getattr(self, "res_%i" % (args.n_layer_resnet-1)), filters=2,
+                                                    kernel_size=[1, 1],
+                                                    padding="same",
+                                                    data_format="channels_last",
+                                                    activation=tf.nn.relu)
+        else:
+            self.evaluation_conv = tf.layers.conv2d(inputs=self.conv3, filters=2,
+                                                    kernel_size=[1, 1],
+                                                    padding="same",
+                                                    data_format="channels_last",
+                                                    activation=tf.nn.relu)
         self.evaluation_conv_flat = tf.reshape(
                 self.evaluation_conv, [-1, 2 * board_height * board_width])
         self.evaluation_fc1 = tf.layers.dense(inputs=self.evaluation_conv_flat,
@@ -124,7 +132,7 @@ class PolicyValueNet():
                                       activation=None)
         out = tf.layers.batch_normalization(out, axis=1, training=training)
         out = tf.nn.relu(out)
-        out = tf.layers.conv2d(inputs=input, filters=planes,
+        out = tf.layers.conv2d(inputs=out, filters=planes,
                                       kernel_size=[3, 3], padding="same",
                                       data_format="channels_last",
                                       activation=None)
