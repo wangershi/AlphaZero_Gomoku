@@ -125,6 +125,7 @@ class PolicyValueNet():
             self.restore_model(model_file)
 
     def ResBlock(self, input, training=False, planes=128):
+        '''
         residual = input
         out = tf.layers.conv2d(inputs=input, filters=planes,
                                       kernel_size=[3, 3], padding="same",
@@ -140,6 +141,11 @@ class PolicyValueNet():
         out += residual
 
         return tf.nn.relu(out)
+        '''
+        return tf.layers.conv2d(inputs=input, filters=planes,
+                                      kernel_size=[3, 3], padding="same",
+                                      data_format="channels_last",
+                                      activation=tf.nn.relu)
 
     def policy_value(self, state_batch):
         """

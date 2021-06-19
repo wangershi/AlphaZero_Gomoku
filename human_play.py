@@ -10,16 +10,16 @@ from __future__ import print_function
 from game import Board, Game
 from models.mcts_alphaZero import MCTSPlayer
 from models.policy_value_net_numpy import PolicyValueNetNumpy
-from models.policy_value_net_pytorch2 import PolicyValueNet as PytorchPolicyValueNet2 # Pytorch
-from models.policy_value_net_pytorch import PolicyValueNet as PytorchPolicyValueNet # Pytorch
+#from models.policy_value_net_tensorflow import PolicyValueNet as PytorchPolicyValueNet2 # Pytorch
+#from models.policy_value_net_tensorflow import PolicyValueNet as PytorchPolicyValueNet # Pytorch
 from models.policy_value_net_tensorflow import PolicyValueNet as TensorflowPolicyValueNet# Tensorflow
 from models.policy_value_net_tensorflow2 import PolicyValueNet as TensorflowPolicyValueNet2# Tensorflow
 import pickle
 import os
 MODEL_CLASSES = {
 "numpy":PolicyValueNetNumpy,
-"pytorch":PytorchPolicyValueNet,
-"pytorch2":PytorchPolicyValueNet2,
+#"pytorch":PytorchPolicyValueNet,
+#"pytorch2":PytorchPolicyValueNet2,
 "tensorflow":TensorflowPolicyValueNet,
 "tensorflow2":TensorflowPolicyValueNet2
 }

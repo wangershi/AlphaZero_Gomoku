@@ -13,15 +13,15 @@ from collections import defaultdict, deque
 from game import Board, Game
 from models.mcts_pure import MCTSPlayer as MCTS_Pure
 from models.mcts_alphaZero import MCTSPlayer
-from models.policy_value_net_pytorch import PolicyValueNet as PytorchPolicyValueNet # Pytorch
-from models.policy_value_net_pytorch2 import PolicyValueNet as PytorchPolicyValueNet2 # Pytorch
+#from models.policy_value_net_pytorch import PolicyValueNet as PytorchPolicyValueNet # Pytorch
+#from models.policy_value_net_pytorch2 import PolicyValueNet as PytorchPolicyValueNet2 # Pytorch
 
 from models.policy_value_net_tensorflow import PolicyValueNet as TensorflowPolicyValueNet# Tensorflow
 from models.policy_value_net_tensorflow2 import PolicyValueNet as TensorflowPolicyValueNet2# Tensorflow
 import os
 MODEL_CLASSES = {
-"pytorch":PytorchPolicyValueNet,
-"pytorch2":PytorchPolicyValueNet2,
+#"pytorch":PytorchPolicyValueNet,
+#"pytorch2":PytorchPolicyValueNet2,
 "tensorflow":TensorflowPolicyValueNet,
 "tensorflow2":TensorflowPolicyValueNet2
 }
@@ -111,9 +111,13 @@ class TrainPipeline():
         else:
             # start training from a new policy-value net
             print("start training from a new policy-value net")
-            self.policy_value_net = MODEL_CLASSES[args.model_type](args, self.board_width,
-                                                   self.board_height,
-                                                   training=True)
+            if args.model_type == "tensorflow2":
+                self.policy_value_net = MODEL_CLASSES[args.model_type](args, self.board_width,
+                                                    self.board_height,
+                                                    training=True)
+            else:
+                self.policy_value_net = MODEL_CLASSES[args.model_type](args, self.board_width,
+                                                    self.board_height)
         self.mcts_player = MCTSPlayer(self.policy_value_net.policy_value_fn,
                                       c_puct=self.c_puct,
                                       n_playout=self.n_playout,

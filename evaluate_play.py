@@ -10,9 +10,9 @@ from __future__ import print_function
 from game import Board, Game
 from models.mcts_alphaZero import MCTSPlayer
 from models.policy_value_net_numpy import PolicyValueNetNumpy
-from models.policy_value_net_pytorch import PolicyValueNet as PytorchPolicyValueNet # Pytorch
+#from models.policy_value_net_pytorch import PolicyValueNet as PytorchPolicyValueNet # Pytorch
 from models.policy_value_net_tensorflow import PolicyValueNet as TensorflowPolicyValueNet# Tensorflow
-from models.policy_value_net_pytorch2 import PolicyValueNet as PytorchPolicyValueNet2 # Pytorch
+#from models.policy_value_net_pytorch2 import PolicyValueNet as PytorchPolicyValueNet2 # Pytorch
 from models.policy_value_net_tensorflow2 import PolicyValueNet as TensorflowPolicyValueNet2# Tensorflow
 import pickle
 import random
@@ -22,8 +22,8 @@ import os
 
 MODEL_CLASSES = {
 "numpy":PolicyValueNetNumpy,
-"pytorch":PytorchPolicyValueNet,
-"pytorch2":PytorchPolicyValueNet2,
+#"pytorch":PytorchPolicyValueNet,
+#"pytorch2":PytorchPolicyValueNet2,
 "tensorflow":TensorflowPolicyValueNet,
 "tensorflow2":TensorflowPolicyValueNet2,
 }
@@ -42,7 +42,7 @@ parser.add_argument("--model_file1", default='./best_policy.model', type=str,
                     help="The model_file.")
 parser.add_argument("--model_file2", default='./best_policy.model', type=str,
                     help="The model_file.")
-parser.add_argument("--round_num",default=2,type=int,help="board_height")
+parser.add_argument("--round_num",default=2,type=int,help="round number")
 parser.add_argument("--n_playout",default=400,type=int,help="n_playout")
 parser.add_argument("--n_layer_resnet", default=-1, type=int, help="num of simulations for each move.")
 parser.add_argument("--enable_gui", action='store_true',
