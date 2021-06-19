@@ -24,7 +24,7 @@ Use TensorFlow with Resnet:
 python train.py --model_type tensorflow2 --board_width 9 --board_height 9 --n_in_row 5 --output_dir output --check_freq 200 --game_batch_num 4000 --ef_for_eight 4 --disable_equi_logic --n_layer_resnet 4
 ```
 
-Compare models:
+Compare models (fail at two tf model):
 ```
-python evaluate_play.py --model_type1 tensorflow --model_type2 tensorflow --model_file1 best_model_tf\best_policy.model --model_file2 best_model_tf\best_policy.model --round_num 1 --enable_gui
+python evaluate_play.py --board_width 9 --board_height 9 --n_in_row 5 --model_type1 numpy --model_file1 need_numpy_model --model_type2 tensorflow --model_file2 best_model_tf\best_policy.model --round_num 1 --enable_gui
 ```
